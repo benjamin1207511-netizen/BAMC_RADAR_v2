@@ -1,0 +1,30 @@
+name: Update radar image
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
+permissions:
+  contents: write
+concurrency:
+  group: radar-image-update
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/fetch_hko_radar.py
+      - name: Commit updated radar image
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/data/hko-radar.png site/data/hko-radar.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update HKO radar image"
+            git push
+          else
+            echo "Radar image unchanged; no commit."
+          fi

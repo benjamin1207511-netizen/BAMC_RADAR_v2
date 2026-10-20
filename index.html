@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08111f"><title>BAMC RADAR 2.0｜香港 · 澳门</title>
+<style>
+:root{color-scheme:dark;--bg:#07111e;--panel:#101d2d;--line:#2a3c51;--text:#eef6ff;--muted:#9eb1c7;--cyan:#68d8f3;--green:#6ce6b4;--red:#ff9d9d;--amber:#ffd27a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#18324a 0,transparent 45%),var(--bg);color:var(--text);font:15px/1.5 system-ui,"Microsoft YaHei",sans-serif}
+main{max-width:1500px;margin:auto;padding:20px}header{display:flex;align-items:center;gap:12px;margin-bottom:18px}.logo{display:grid;place-items:center;background:#15364c;border:1px solid #2e6680;border-radius:13px;width:46px;height:46px;color:var(--cyan)}h1{font-size:clamp(21px,3vw,28px);margin:0}.sub{font-size:11px;color:var(--muted);letter-spacing:.12em}.tag{margin-left:auto;border:1px solid #245d4d;background:#0d2b27;color:var(--green);border-radius:99px;padding:6px 10px;font-size:12px}
+.toolbar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:14px}
+button,select{background:#17283a;color:var(--text);border:1px solid #354b62;border-radius:9px;padding:9px 12px;font:inherit}button{cursor:pointer}button:hover{border-color:var(--cyan)}label{color:var(--muted);font-size:12px;display:flex;gap:7px;align-items:center}input{accent-color:#64d9f2}.status{margin-left:auto;color:var(--muted);font-size:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{min-width:0;background:linear-gradient(180deg,#101d2d,#0a1725);border:1px solid var(--line);border-radius:16px;overflow:hidden}.head{display:flex;align-items:center;flex-wrap:wrap;gap:9px;padding:13px 14px;border-bottom:1px solid var(--line)}.head h2{font-size:16px;margin:0}.head small{display:block;color:var(--muted);font-size:11px}.actions{margin-left:auto;display:flex;gap:7px}.actions a{color:var(--cyan);font-size:12px;border:1px solid #34485d;border-radius:7px;padding:5px 7px;text-decoration:none}
+.imagebox{min-height:300px;display:grid;place-items:center;background:#030a12;padding:10px}.radar{display:block;width:100%;height:auto;max-height:65vh;object-fit:contain}.placeholder{max-width:460px;padding:24px;text-align:center;color:var(--muted)}.placeholder strong{display:block;color:var(--amber);margin-bottom:8px}.meta{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;padding:10px 13px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}.state{font-weight:600}.ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--amber)}.notice{margin-top:14px;border:1px solid #5c4b2b;background:#1b1b17;color:#d9cba9;padding:13px 15px;border-radius:12px;font-size:13px}.foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:12px;padding:15px 2px}.hide{display:none!important}
+@media(max-width:850px){main{padding:12px}.grid{grid-template-columns:1fr}.status{width:100%;margin-left:0}.tag{display:none}.imagebox{min-height:240px}.radar{max-height:none}}
+</style></head>
+<body><main>
+<header><div class="logo">◉</div><div><h1>BAMC RADAR 2.0</h1><div class="sub">HONG KONG · MACAU · DIRECT RADAR IMAGE TEST</div></div><div class="tag">原始图像模式</div></header>
+<div class="toolbar">
+<button id="refresh" >↻ 检查并刷新</button>
+<label><input id="auto" type="checkbox" checked> 每 6 分钟自动刷新</label>
+<label><input id="hkoOn" type="checkbox" checked> 香港</label><label><input id="macOn" type="checkbox" checked> 澳门</label>
+<span id="overall" class="status">正在读取发布的雷达图…</span>
+</div>
+<section class="grid">
+<article class="card" id="hkoCard"><div class="head"><div><h2>香港天文台</h2><small>HKO · 官方雷达覆盖图（256 km）</small></div><div class="actions"><a href="https://www.hko.gov.hk/tc/wxinfo/radars/radar_range1.htm" target="_blank" rel="noopener">官方页面 ↗</a><a href="https://www.hko.gov.hk/wxinfo/radars/R4_GIS_rad_256/R4_GIS_server_Radar_256.kml" target="_blank" rel="noopener">KML 索引 ↗</a></div></div>
+<div class="imagebox" id="hkoBox"><div class="placeholder">正在加载香港天文台最新雷达图…</div></div>
+<div class="meta"><span>图像时间：<span id="hkoTime">读取中</span></span><span>状态：<span id="hkoState" class="state">检查中</span></span></div></article>
+<article class="card" id="macCard"><div class="head"><div><h2>澳门地球物理气象局</h2><small>DSMG · 官方雷达图</small></div><div class="actions"><a href="https://www.dsmg.gov.mo/zh-hant/monitoring-images?slug=radarMap" target="_blank" rel="noopener">官方页面 ↗</a></div></div>
+<div class="imagebox" id="macBox"><div class="placeholder"><strong>澳门原始雷达图片接口尚待确认</strong>为避免显示错误图片，本版本不会把普通网页或示意图冒充雷达图。请打开官方页面；后续需确认其真实图片 URL / API。</div></div>
+<div class="meta"><span>图像时间：<span id="macTime">未取得</span></span><span>状态：<span id="macState" class="state warn">接口待验证</span></span></div></article>
+</section>
+<div class="notice"><strong>重要：</strong>本版本使用 GitHub Actions 在服务器端定时抓取香港天文台公开 KML 索引和真实 PNG 雷达图，再由 GitHub Pages 同源展示，绕过浏览器直接跨域读取的问题。香港图像仅在抓取工作流成功后显示；GitHub Actions 可能有调度延迟。澳门官网的实际雷达图文件地址目前未被可靠确认，因此界面明确标记为“接口待验证”，不会伪造已接通。要完成澳门自动抓取，必须先确认官方页面的真实图片请求地址。</div>
+<div class="foot"><span>来源：香港天文台、澳门地球物理气象局</span><span>本机时间：<time id="clock"></time></span></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+function setState(id,msg,cls){$(id).textContent=msg;$(id).className='state '+(cls||'')}
+async function refresh(){
+ $('overall').textContent='正在检查已发布的真实图像…';
+ const hkoUrl='data/hko-radar.png?ts='+Date.now();
+ const im=new Image();
+ im.className='radar'; im.alt='香港天文台官方雷达图';
+ im.onload=()=>{const box=$('hkoBox');box.replaceChildren(im);setState('hkoState','图像可加载','ok');$('hkoTime').textContent='由抓取任务记录，见下方状态';$('overall').textContent='香港雷达 PNG 已加载；澳门接口待验证';};
+ im.onerror=()=>{setState('hkoState','尚无成功抓取的图像','bad');$('hkoBox').innerHTML='<div class="placeholder"><strong>当前尚未发布有效雷达 PNG</strong>请检查 GitHub Actions 的“Update radar image”工作流是否成功运行。初次部署后可手动运行工作流。</div>';$('hkoTime').textContent='不可用';$('overall').textContent='香港图像尚未成功发布；请查看 Actions 日志';};
+ im.src=hkoUrl;
+ // The action publishes metadata separately; if available, show the timestamp.
+ try{const r=await fetch('data/hko-radar.json?ts='+Date.now());if(r.ok){const j=await r.json();$('hkoTime').textContent=j.time||j.filename||'已抓取';}}catch(e){}
+}
+$('refresh').addEventListener('click',refresh);
+$('auto').addEventListener('change',()=>{$('overall').textContent=$('auto').checked?'自动刷新已开启':'自动刷新已关闭';});
+$('hkoOn').addEventListener('change',e=>$('hkoCard').classList.toggle('hide',!e.target.checked));
+$('macOn').addEventListener('change',e=>$('macCard').classList.toggle('hide',!e.target.checked));
+setInterval(()=>{if($('auto').checked)refresh()},6*60*1000);
+setInterval(()=>$('clock').textContent=new Date().toLocaleString(),1000);$('clock').textContent=new Date().toLocaleString();refresh();
+</script></body></html>
